@@ -2,7 +2,8 @@ import React from 'react'
 import { Field, reduxForm, Form } from 'redux-form'
 import { Button } from 'react-bootstrap'
 
-import submit from './loginSubmit'
+import loginSubmit from './loginSubmit'
+
 
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
   <div>
@@ -14,11 +15,15 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
   </div>
 )
 
-const SubmitValidationForm = props => {
-  const { error, handleSubmit, pristine, reset, submitting, onSubmit } = props
+const handleLogin = ev => {
+  ev.preventDefault()
+  console.log(ev)
+}
 
+const LoginForm = ({ error, handleSubmit, pristine, reset, submitting }) => {
+  console.log(handleSubmit)
   return (
-    <Form onSubmit={handleSubmit(submit)}>
+    <form action="" method="post" onSubmit={handleSubmit(handleLogin)}>
       <Field
         name="username"
         type="text"
@@ -31,18 +36,15 @@ const SubmitValidationForm = props => {
         component={renderField}
         label="Password"
       />
-      {error && <strong>{error}</strong>}
       <div>
-        <Button type="submit" disabled={submitting}>Log In</Button>{' '}
+        <Button type="submit" disabled={pristine || submitting}>Sign In</Button>
+
         <Button type="button" disabled={pristine || submitting} onClick={reset}>
-          Clear Values
-        </Button>{' '}
+          Clear Login Form
+        </Button>
       </div>
-          
-    </Form>
+    </form>
   )
 }
 
-export default reduxForm({
-  form: 'submitValidation', // a unique identifier for this form
-})(SubmitValidationForm)
+export default reduxForm({form: 'loginForm'})(LoginForm)

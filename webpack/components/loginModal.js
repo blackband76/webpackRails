@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { Values } from 'redux-form-website-template'
 
-import LoginForm from '../components/loginForm'
+import LoginForm from './loginForm'
 import {ShowResult} from './showResult'
 import { Link } from 'react-router-dom'
 
@@ -26,7 +26,6 @@ export default class LoginModal extends React.Component {
         <Button onClick={() => this.setState({ show: true})}>
           Sign in or Sign up
         </Button>
-
         <Modal
           show={this.state.show}
           onHide={close}
@@ -44,7 +43,7 @@ export default class LoginModal extends React.Component {
                 onClick={() => this.setState({ show: false})}>Sign Up NOW!
               </Link>
             </div>
-            <Values form="submitValidation" />
+            <Values form="loginForm" />
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={close}>Close</Button>
