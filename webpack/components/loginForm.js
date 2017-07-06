@@ -3,7 +3,7 @@ import { Field, reduxForm, Form } from 'redux-form'
 import { Button } from 'react-bootstrap'
 
 import loginSubmit from './loginSubmit'
-
+import { required, email } from './validation'
 
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
   <div>
@@ -15,35 +15,31 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
   </div>
 )
 
-const handleLogin = ev => {
-  ev.preventDefault()
-  console.log(ev)
-}
-
 const LoginForm = ({ error, handleSubmit, pristine, reset, submitting }) => {
-  console.log(handleSubmit)
   return (
-    <form action="" method="post" onSubmit={handleSubmit(handleLogin)}>
-      <Field
-        name="username"
-        type="text"
-        component={renderField}
-        label="Username"
-      />
-      <Field
-        name="password"
-        type="password"
-        component={renderField}
-        label="Password"
-      />
+    <form onSubmit={handleSubmit(loginSubmit)}>
       <div>
+        <Field
+          name="email"
+          type="email"
+          component={renderField}
+          label="Email Address"
+          validate={[required, email]}
+        />
+        <Field
+          name="password"
+          type="password"
+          component={renderField}
+          label="Password"
+          validate={ required }
+        />
         <Button type="submit" disabled={pristine || submitting}>Sign In</Button>
 
         <Button type="button" disabled={pristine || submitting} onClick={reset}>
           Clear Login Form
         </Button>
-      </div>
-    </form>
+    </div>
+  </form>
   )
 }
 

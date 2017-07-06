@@ -1,44 +1,15 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import { Button, Col, Row } from 'react-bootstrap'
+import { Button, Col, Row, FormGroup, FormControl } from 'react-bootstrap'
 import { Values } from 'redux-form-website-template'
 import { formValueSelector } from 'redux-form'
 import { connect } from 'react-redux'
 
 import SignUpSubmit from '../components/signUpSubmit'
-
+import { required, email, minLength, maxLength, passwordMatch, ageValidation } from '../components/validation'
 
 const labelStyle = {
   marginTop: "5px"
-}
-
-const required = value => (value ? undefined : 'Required')
-
-const email = value =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-    ? <strong>Invalid email address</strong>
-    : undefined
-
-const minLength = min => value =>
-  value && value.length < min ? `Must be ${min} characters or more` : undefined
-
-const maxLength = max => value =>
-  value && value.length > max ? `Must be ${max} characters or less` : undefined
-
-const passwordMatch = password => value =>
-  value && password != value ? 'password is not matched' : undefined
-
-const ageValidation = (value) => {
-  const birthDate = new Date(value)
-  const ageDifMs = Date.now() - birthDate
-  const ageDate = new Date(ageDifMs)
-  const age = Math.abs(ageDate.getUTCFullYear() - 1970)
-  if (age < 12) {
-    return 'Sorry, You are under 12 years old'
-  }
-  else {
-    return undefined
-  }
 }
 
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
@@ -46,7 +17,7 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
     <Col sm={2}><label style={labelStyle} className="pull-right">{label}</label></Col>
     <Col sm={4}>
       <input className="form-control" {...input} placeholder={label} type={type} />
-      {touched && error && <span>{error}</span>}
+      {touched && error && <span className="bar">{error}</span>}
     </Col>
   </Row>
 )
@@ -61,7 +32,7 @@ const radioGroup = ({ input, label, type, options, meta: { touched, error } }) =
           value={o.value} 
           checked={o.value === input.value} 
         /> 
-        &nbsp;{o.title}&nbsp;&nbsp;&nbsp;</label>)}
+        &nbsp;{o.title}&nbsp;&nbsp;&nbsp;</label>)}<br />
       {touched && error && <span className="error">{error}</span>}
     </Col>
   </Row>
@@ -71,12 +42,12 @@ const maxLength20 = maxLength(20)
 const minLength6 = minLength(6)
 
 let SignUpForm = props => {
-  const { error, handleSubmit, pristine, reset, submitting } = props
-  const passwordCheck = passwordMatch( props.password )
+  const { error, handleSubmit, pristine, reset, submitting, password } = props
+  const passwordCheck = passwordMatch( password )
   return (
     <div className="container">
       <form onSubmit={handleSubmit(SignUpSubmit)}>
-      <Field
+        <Field
           name="displayName"
           type="text"
           component={renderField}
@@ -95,16 +66,19 @@ let SignUpForm = props => {
           type="password"
           component={renderField}
           label="password"
-          validate={[required, minLength6]}
-          warn={minLength6}
+          validate={[required, minLength6, maxLength20]}
+          warn={[minLength6, maxLength20]}
         />
-        <Field
-          name="confirmPassword"
-          type="password"
-          component={renderField}
-          label="Comfirm Password"
-          validate={[required, passwordCheck]}
-        />
+        { 
+          password ?
+          <Field
+            name="confirmPassword"
+            type="password"
+            component={renderField}
+            label="Comfirm Password"
+            validate={[required, passwordCheck]}
+          /> : undefined
+        }
         <Row>
         <Field 
           component={radioGroup} 

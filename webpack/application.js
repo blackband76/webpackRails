@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import store from './store'
 import Index from './containers/index'
+import './styles/globalStyle.scss'
 
 render(
 	<Provider store={store}>
