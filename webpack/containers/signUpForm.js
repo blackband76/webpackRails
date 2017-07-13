@@ -16,8 +16,8 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
   <Row>
     <Col sm={2}><label style={labelStyle} className="pull-right">{label}</label></Col>
     <Col sm={4}>
-      <input className="form-control" {...input} placeholder={label} type={type} />
-      {touched && error && <span className="bar">{error}</span>}
+      <input className={`form-control ${touched && error ? "errorBox" : undefined}`} {...input} placeholder={label} type={type} />
+      {touched && error && <span>{error}</span>}
     </Col>
   </Row>
 )
